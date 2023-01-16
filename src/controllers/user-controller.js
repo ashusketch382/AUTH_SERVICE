@@ -1,3 +1,4 @@
+const { response } = require("express");
 const UserService = require("../service/user-service");
 
 const userService = new UserService();
@@ -22,7 +23,27 @@ const create = async (req,res) => {
         })
     }
 }
+const signIn =  async (req, res) => {
+    try {
+        const result = await userService.signIn(req.body.email, req.body.password);
+        return res.status(200).json({
+            data: result,
+            success: true,
+            message: "successfully signed in",
+            err: {}
+        });
+
+    } catch (error) {
+        res.status(501).json({
+            data: {},
+            success: false,
+            message: "Couldn't sign in",
+            err: error
+        });
+    }
+}
 
 module.exports = {
-    create
+    create,
+    signIn
 }

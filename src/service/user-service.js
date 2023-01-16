@@ -19,6 +19,26 @@ class UserService {
         }
     }
 
+    async signIn(email, plainPassword){
+        try {
+            // step1 -> get the user based on the email
+            const user = await this.userRepository.getByEmail(email);
+            
+            // step2 -> match the incoming password with encrypted password
+            const passwordMatch = this.checkPassword(plainPassword, user.password);
+            if(!passwordMatch) {
+                console.log("password doesn't match");
+                throw {error: "Invalid Password"};
+            }
+
+            //  step3 -> generate the token and send it to the frontend side
+            const newToken = this.createToken({email: user.email, id: user.id}); // this argument object needs to be plain js object it can't be sequel object
+            return newToken;
+        } catch (error) {
+            console.log("something went wrong while signing in");
+            throw(error);
+        }
+    }
     createToken (user){
         try {
             const result = jwt.sign(user, JWT_KEY, {expiresIn: '1d'});
