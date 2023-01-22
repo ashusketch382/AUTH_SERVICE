@@ -88,6 +88,16 @@ class UserService {
             throw { error: "invalid Password"};
         }
     }
+
+    isAdmin (userId) {
+        try {
+            const result = this.userRepository.isAdmin(userId);
+            return result;
+        } catch (error) {
+            console.log("somehting went wrong in service layer");
+            throw(error);
+        }
+    }
 }
 
 module.exports = UserService;

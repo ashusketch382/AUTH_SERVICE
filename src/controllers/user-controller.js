@@ -1,4 +1,5 @@
 const { response } = require("express");
+const user = require("../models/user");
 const UserService = require("../service/user-service");
 
 const userService = new UserService();
@@ -63,8 +64,27 @@ const isAuthenticated = async (req, res) => {
     }
 }
 
+const isAdmin = async (req,res) => {
+    try {
+        const response = await userService.isAdmin(req.body.id);
+        return res.status(200).json({
+            data: response,
+            success: true,
+            message: "Successfully verified user is admin or not",
+            err: {}
+        });
+    } catch (error) {
+        return res.status(500).json({
+            data: {},
+            message: "Couldn't verify user is admin or not",
+            success: false,
+            err: error
+        });
+    }
+}
 module.exports = {
     create,
     signIn,
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
 }
