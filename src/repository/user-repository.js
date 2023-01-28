@@ -1,4 +1,5 @@
 const  ValidationError  = require("../utils/errors/validation-error");
+const ClientError = require("../utils/errors/client-error");
 const { User, Role } = require("../models/index");
 const { StatusCodes } = require("http-status-codes");
 
@@ -38,6 +39,9 @@ class UserRepository {
             });
             return user;
         } catch (error) {
+            if(!user){
+                throw new ClientError("userId");
+            }
             console.log("something went wrong in repository layer");
             throw(error);
         }
@@ -52,6 +56,9 @@ class UserRepository {
             });
             return user;
         } catch (error) {
+            if(!user){
+                throw new ClientError("email");
+            }
             console.log("something went wrong while fetching user by email");
             throw(error);
         }
@@ -65,8 +72,12 @@ class UserRepository {
                     name : 'ADMIN'
                 }
             });
+            if(!user){
+                throw new ClientError("user");
+            }
             return user.hasRole(adminRole);
         } catch (error) {
+            if(error.name == "userNotFound") throw error;
             console.log("something went wrong in repository layer");
             throw(error);
         }

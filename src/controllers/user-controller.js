@@ -35,11 +35,11 @@ const signIn =  async (req, res) => {
         });
 
     } catch (error) {
-        res.status(501).json({
+        res.status(error.statusCode).json({
             data: {},
             success: false,
-            message: "Couldn't sign in",
-            err: error
+            message: error.message,
+            err: error.explanation
         });
     }
 }
@@ -55,11 +55,11 @@ const isAuthenticated = async (req, res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode).json({
             data: {},
             success: false,
-            message: "Couldn't Authenticate, something went wrong",
-            err: error
+            message: error.message,
+            err: error.explanation
         });
     }
 }
@@ -74,11 +74,11 @@ const isAdmin = async (req,res) => {
             err: {}
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.statusCode).json({
             data: {},
-            message: "Couldn't verify user is admin or not",
+            message: error.message,
             success: false,
-            err: error
+            err: error.explanation
         });
     }
 }
